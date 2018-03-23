@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es5",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "rootDir": ".",
+    "sourceMap": true,
+    "lib": ["dom", "es2017"],
+    "typeRoots": ["node_modules/@types", "src"],
+    "baseUrl": "./"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

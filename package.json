@@ -1,0 +1,21 @@
+{
+  "name": "staci",
+  "version": "1.0.0",
+  "description": "Simple way to get type checking in vuex",
+  "private": false,
+  "types": "src/index.d.ts",
+  "devDependencies": {
+    "vue": "^2.5.16",
+    "vuex": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joelmut/staci.git"
+  },
+  "author": "Joel Mut <joelmut1993@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joelmut/staci/issues"
+  },
+  "homepage": "https://github.com/joelmut/staci#readme"
+}

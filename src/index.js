@@ -1,0 +1,79 @@
+import * as Vuex from 'vuex';
+export var mapStore = function () { return ({
+    getters: function (getters) {
+        return getters;
+    },
+    actions: function (actions) {
+        return actions;
+    },
+    mutations: function (mutations) {
+        return mutations;
+    },
+}); };
+var Store = /** @class */ (function () {
+    function Store(store) {
+        var _this = this;
+        this.store = store;
+        this.replaceState = function (state) { return _this.store.replaceState(state); };
+        this.getType = function (type) { return (type.type ? type.type : type); };
+        this.subscribe = function (fn) { return _this.store.subscribe(fn); };
+        this.watch = function (getter, cb, options) {
+            return _this.store.watch(getter, cb, options);
+        };
+        this.registerModule = function (path, module, options) {
+            return _this.store.registerModule(path, module, options);
+        };
+        this.unregisterModule = function (path) { return _this.store.unregisterModule(path); };
+        this.hotUpdate = function (options) { return _this.store.hotUpdate(options); };
+    }
+    Object.defineProperty(Store.prototype, "state", {
+        get: function () {
+            return this.store.state;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Store.prototype, "getters", {
+        get: function () {
+            return this.store.getters;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Store.prototype.dispatch = function (type, payload, options) {
+        return this.store.dispatch(this.getType(type), payload, options);
+    };
+    Store.prototype.commit = function (type, payload, options) {
+        return this.store.commit(this.getType(type), payload, options);
+    };
+    return Store;
+}());
+export var createStore = function (store) {
+    var vuexStore = new Vuex.Store(store);
+    var st = new Store(vuexStore);
+    return {
+        store: st,
+        mapState: function (state) {
+            return name ? Vuex.mapState(name, state) : Vuex.mapState(state);
+        },
+        mapGetters: function (getters) {
+            return name
+                ? Vuex.mapGetters(name, getters)
+                : Vuex.mapGetters(getters);
+        },
+        mapActions: function (actions) {
+            return name
+                ? Vuex.mapActions(name, actions)
+                : Vuex.mapActions(actions);
+        },
+        mapMutations: function (mutations) {
+            return name
+                ? Vuex.mapMutations(name, mutations)
+                : Vuex.mapMutations(mutations);
+        },
+        mapModule: function (namespace) {
+            return createStore(store['modules'][namespace]);
+        },
+    };
+};
+//# sourceMappingURL=index.js.map
