@@ -4,6 +4,17 @@
   "description": "Simple way to get type checking in vuex",
   "private": false,
   "types": "src/index.d.ts",
+  "keywords": [
+    "vuex",
+    "vue",
+    "typescript",
+    "state-management",
+    "strongly-typed",
+    "intellisense",
+    "vue-typescript",
+    "typescript-vue",
+    "strong-typed"
+  ],
   "devDependencies": {
     "vue": "^2.5.16",
     "vuex": "^3.0.1"
