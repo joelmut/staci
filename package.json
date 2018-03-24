@@ -1,6 +1,6 @@
 {
   "name": "staci",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Simple way to get type checking in vuex",
   "private": false,
   "types": "src/index.d.ts",
