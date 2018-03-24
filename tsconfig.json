@@ -10,7 +10,7 @@
     "rootDir": ".",
     "sourceMap": true,
     "lib": ["dom", "es2017"],
-    "typeRoots": ["node_modules/@types", "src"],
+    "typeRoots": ["node_modules/@types", "src", "examples"],
     "baseUrl": "./"
   },
   "include": ["src"],
