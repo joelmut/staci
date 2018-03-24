@@ -3,7 +3,7 @@ import * as Vuex from 'vuex';
 // Global Types
 type Values<T> = { [K in keyof T]: T[K] };
 
-interface Payload<T> extends Vuex.Payload {
+interface Payload<T> {
   type: keyof T;
 }
 
@@ -67,12 +67,12 @@ export type MutationTree<S, M> = MapMutation<S, M>;
 type MapMutation<S, M> = { [P in keyof M]: (state: S, payload: any) => M[P] };
 
 interface Dispatch<T> {
-  (payloadWithType: Payload<T>, options?: Vuex.DispatchOptions): Promise<any>;
+  (type: Payload<T>, options?: Vuex.DispatchOptions): Promise<any>;
   (type: keyof T, payload?: any, options?: Vuex.DispatchOptions): Promise<any>;
 }
 
 interface Commit<T> {
-  (payloadWithType: Payload<T>, options?: Vuex.CommitOptions): void;
+  (type: Payload<T>, options?: Vuex.CommitOptions): void;
   (type: keyof T, payload?: any, options?: Vuex.CommitOptions): void;
 }
 
@@ -86,25 +86,15 @@ export interface Store<S, G, A, M> {
 
   replaceState(state: S): void;
 
-  dispatch(
-    payloadWithType: Payload<A>,
-    options?: Vuex.DispatchOptions,
-  ): Promise<any>;
+  dispatch(type: Payload<A>, options?: Vuex.DispatchOptions): Promise<any>;
   dispatch(
     type: keyof A,
     payload?: any,
     options?: Vuex.DispatchOptions,
   ): Promise<any>;
 
-  commit(
-    payloadWithType: Payload<M>,
-    options?: Vuex.DispatchOptions,
-  ): Promise<any>;
-  commit(
-    type: keyof M,
-    payload?: any,
-    options?: Vuex.DispatchOptions,
-  ): Promise<any>;
+  commit(type: Payload<M>, options?: Vuex.DispatchOptions): void;
+  commit(type: keyof M, payload?: any, options?: Vuex.DispatchOptions): void;
 
   subscribe<P extends MutationPayload<M>>(
     fn: (mutation: P, state: S) => any,
