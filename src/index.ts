@@ -1,4 +1,10 @@
-import * as Vuex from 'vuex';
+import {
+  mapActions,
+  mapGetters,
+  mapMutations,
+  mapState,
+  install as VuexInstall,
+} from 'vuex';
 import * as VuexTypes from 'vuex/types';
 import {
   Store as IStore,
@@ -6,6 +12,7 @@ import {
   MapAction,
   MapMutation,
 } from './staci-types';
+import Vue, { VueConstructor } from 'vue';
 
 export const createGetters = <S, RS = any>(state: S, rootState?: RS) => <G>(
   getters: MapGetter<S, G, RS> | VuexTypes.GetterTree<S, RS>,
@@ -78,7 +85,7 @@ export const createStore = <S extends Values<S>>(store: S) => {
   type ModulesKeys = keyof Modules;
   type KeyValue<T> = { [x: string]: T };
 
-  const vuexStore = new Vuex.Store<State>(store);
+  const vuexStore = new VuexTypes.Store<State>(store);
   const st = new Store<State, Getters, Actions, Mutations>(vuexStore) as IStore<
     State,
     Getters,
@@ -88,24 +95,22 @@ export const createStore = <S extends Values<S>>(store: S) => {
   return {
     store: st,
     mapState(state: StateKeys[] | KeyValue<StateKeys>) {
-      return name
-        ? Vuex.mapState(name, state as any)
-        : Vuex.mapState(state as any);
+      return name ? mapState(name, state as any) : mapState(state as any);
     },
     mapGetters(getters: GettersKeys[] | KeyValue<GettersKeys>) {
       return name
-        ? Vuex.mapGetters(name, getters as any)
-        : Vuex.mapGetters(getters as any);
+        ? mapGetters(name, getters as any)
+        : mapGetters(getters as any);
     },
     mapActions(actions: ActionsKeys[] | KeyValue<ActionsKeys>) {
       return name
-        ? Vuex.mapActions(name, actions as any)
-        : Vuex.mapActions(actions as any);
+        ? mapActions(name, actions as any)
+        : mapActions(actions as any);
     },
     mapMutations(mutations: MutationsKeys[] | KeyValue<MutationsKeys>) {
       return name
-        ? Vuex.mapMutations(name, mutations as any)
-        : Vuex.mapMutations(mutations as any);
+        ? mapMutations(name, mutations as any)
+        : mapMutations(mutations as any);
     },
     mapModule<N extends ModulesKeys>(namespace: N) {
       return createStore(store['modules'][namespace] as Modules[N]);
@@ -113,4 +118,4 @@ export const createStore = <S extends Values<S>>(store: S) => {
   };
 };
 
-export const install = Vue => Vue.use(Vuex);
+export const install = Vue => Vue.use({ install: VuexInstall });
