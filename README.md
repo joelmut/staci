@@ -24,6 +24,14 @@ import {
   createMutations,
   createActions,
 } from 'staci';
+import Staci from 'staci';
+
+// Use it as a plugin
+
+// you can use Staci
+Vue.use(Staci);
+// or Vuex, not both, just pick one.
+Vue.use(Vuex);
 
 // Data
 
@@ -81,6 +89,12 @@ const mainStore = {
   },
 };
 
+// You can create the Vuex.Store instance outside createStore,
+// createStore has a property call store, that is the same has Vuex.Store but two diferent instances,
+// you can use both if you want.
+
+export const store = Vuex.Store(mainStore);
+
 export default createStore(mainStore);
 ```
 
@@ -90,11 +104,14 @@ export default createStore(mainStore);
 import Vue from 'vue';
 
 import Series from './Series.vue';
-import store from './store';
+import { store },typedStore from './store';
 
 new Vue({
   render: h => h(Series),
-  store: store.store,
+  // Same as before, you can register the store from Vuex.Store
+  store,
+  // or you can use the store from createStore
+  store:typedStore.store,
   components: { Series },
 }).$mount('#app');
 ```

@@ -3,30 +3,17 @@ import { Store as IStore, MapGetter, MapAction, MapMutation } from './staci-type
 export declare const createGetters: <S, RS = any>(state: S, rootState?: RS) => <G>(getters: MapGetter<S, G, RS> | VuexTypes.GetterTree<S, RS>) => MapGetter<S, G, RS>;
 export declare const createActions: <S, G, M, RS = any>(state: S, getters: G, mutations: M, rootState?: RS) => <A>(actions: MapAction<S, G, A, M, RS> | VuexTypes.ActionTree<S, RS>) => MapAction<S, G, A, M, RS>;
 export declare const createMutations: <S>(state: S) => <M>(mutations: VuexTypes.MutationTree<S> | MapMutation<S, M>) => MapMutation<S, M>;
-export declare const createStore: <S extends {
-    [K in keyof S]: S[K];
-}>(store: S) => {
-    store: IStore<S["state"], S["getters"], S["actions"], S["mutations"]>;
-    mapState(state: {
-        [x: string]: keyof S["state"];
-    } | (keyof S["state"])[]): {
-        [key: string]: () => any;
-    };
-    mapGetters(getters: {
-        [x: string]: keyof S["getters"];
-    } | (keyof S["getters"])[]): {
-        [key: string]: () => any;
-    };
-    mapActions(actions: {
-        [x: string]: keyof S["actions"];
-    } | (keyof S["actions"])[]): {
-        [key: string]: (...args: any[]) => Promise<any>;
-    };
-    mapMutations(mutations: {
-        [x: string]: keyof S["mutations"];
-    } | (keyof S["mutations"])[]): {
-        [key: string]: (...args: any[]) => void;
-    };
-    mapModule<N extends keyof S["modules"]>(namespace: N): any;
+export declare type Values<T> = {
+    [K in keyof T]: T[K];
 };
+export declare type Key<T> = keyof T;
+export interface Mappers<Store extends Values<Store>> {
+    store: IStore<Store['state'], Store['getters'], Store['actions'], Store['mutations']>;
+    mapState(state: Key<Store['state']>[]): VuexTypes.Dictionary<VuexTypes.Computed>;
+    mapGetters(getters: Key<Store['getters']>[]): VuexTypes.Dictionary<VuexTypes.Computed>;
+    mapMutations(mutations: Key<Store['mutations']>[]): VuexTypes.Dictionary<VuexTypes.MutationMethod>;
+    mapActions(actions: Key<Store['actions']>[]): VuexTypes.Dictionary<VuexTypes.ActionMethod>;
+    namespace<N extends Key<Store['modules']>>(namespace: N): Mappers<Store['modules'][N]>;
+}
+export declare const createStore: <S extends Values<S>>(store: S) => Mappers<S>;
 export declare const install: (Vue: any) => any;

@@ -3,7 +3,11 @@ import {
   createGetters,
   createMutations,
   createActions,
-} from '../src';
+} from '../dist';
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
 
 // Data
 
@@ -32,7 +36,7 @@ const state: SerieState = {
 };
 
 const getters = createGetters(state)({
-  series: state => state.series,
+  series2: state => state.series,
 });
 
 const mutations = createMutations(state)({
@@ -61,5 +65,7 @@ const mainStore = {
     series: seriesModule,
   },
 };
+
+export const store = new Vuex.Store(mainStore);
 
 export default createStore(mainStore);

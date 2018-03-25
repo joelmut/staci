@@ -53,26 +53,18 @@ exports.createStore = function (store) {
     return {
         store: st,
         mapState: function (state) {
-            return name
-                ? Vuex.mapState(name, state)
-                : Vuex.mapState(state);
+            return Vuex.mapState(state);
         },
         mapGetters: function (getters) {
-            return name
-                ? Vuex.mapGetters(name, getters)
-                : Vuex.mapGetters(getters);
-        },
-        mapActions: function (actions) {
-            return name
-                ? Vuex.mapActions(name, actions)
-                : Vuex.mapActions(actions);
+            return Vuex.mapGetters(getters);
         },
         mapMutations: function (mutations) {
-            return name
-                ? Vuex.mapMutations(name, mutations)
-                : Vuex.mapMutations(mutations);
+            return Vuex.mapMutations(mutations);
         },
-        mapModule: function (namespace) {
+        mapActions: function (actions) {
+            return Vuex.mapActions(actions);
+        },
+        namespace: function (namespace) {
             return exports.createStore(store['modules'][namespace]);
         },
     };
