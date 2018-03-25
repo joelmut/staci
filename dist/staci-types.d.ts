@@ -1,4 +1,4 @@
-import * as Vuex from 'vuex';
+import * as Vuex from 'vuex/types';
 import { Vue, VueConstructor } from 'vue/types/vue';
 export declare type Values<T> = {
     [K in keyof T]: T[K];
