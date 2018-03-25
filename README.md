@@ -23,7 +23,7 @@ import {
   createGetters,
   createMutations,
   createActions,
-} from '../src';
+} from 'staci';
 
 // Data
 

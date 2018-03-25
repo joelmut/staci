@@ -3,6 +3,7 @@
   "version": "1.0.4",
   "description": "Simple way to get type checking in vuex",
   "private": false,
+  "main": "src/index.ts",
   "types": "src/index.d.ts",
   "keywords": [
     "vuex",
