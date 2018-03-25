@@ -1,4 +1,5 @@
 import * as Vuex from 'vuex';
+import * as VuexTypes from 'vuex/types';
 import {
   Store as IStore,
   MapGetter,
@@ -7,7 +8,7 @@ import {
 } from './staci-types';
 
 export const createGetters = <S, RS = any>(state: S, rootState?: RS) => <G>(
-  getters: MapGetter<S, G, RS> | Vuex.GetterTree<S, RS>,
+  getters: MapGetter<S, G, RS> | VuexTypes.GetterTree<S, RS>,
 ) => getters as MapGetter<S, G, RS>;
 
 export const createActions = <S, G, M, RS = any>(
@@ -15,15 +16,15 @@ export const createActions = <S, G, M, RS = any>(
   getters: G,
   mutations: M,
   rootState?: RS,
-) => <A>(actions: MapAction<S, G, A, M, RS> | Vuex.ActionTree<S, RS>) =>
+) => <A>(actions: MapAction<S, G, A, M, RS> | VuexTypes.ActionTree<S, RS>) =>
   actions as MapAction<S, G, A, M, RS>;
 
 export const createMutations = <S>(state: S) => <M>(
-  mutations: Vuex.MutationTree<S> | MapMutation<S, M>,
+  mutations: VuexTypes.MutationTree<S> | MapMutation<S, M>,
 ) => mutations as MapMutation<S, M>;
 
 class Store<S, G, A, M> implements IStore<S, G, A, M> {
-  constructor(private store: Vuex.Store<S>) {}
+  constructor(private store: VuexTypes.Store<S>) {}
 
   get state() {
     return this.store.state;
