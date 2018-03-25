@@ -1,9 +1,11 @@
-import * as Vuex from 'vuex';
-export var createGetters = function (state, rootState) { return function (getters) { return getters; }; };
-export var createActions = function (state, getters, mutations, rootState) { return function (actions) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Vuex = require("vuex");
+exports.createGetters = function (state, rootState) { return function (getters) { return getters; }; };
+exports.createActions = function (state, getters, mutations, rootState) { return function (actions) {
     return actions;
 }; };
-export var createMutations = function (state) { return function (mutations) { return mutations; }; };
+exports.createMutations = function (state) { return function (mutations) { return mutations; }; };
 var Store = /** @class */ (function () {
     function Store(store) {
         var _this = this;
@@ -45,7 +47,7 @@ var Store = /** @class */ (function () {
     };
     return Store;
 }());
-export var createStore = function (store) {
+exports.createStore = function (store) {
     var vuexStore = new Vuex.Store(store);
     var st = new Store(vuexStore);
     return {
@@ -71,7 +73,7 @@ export var createStore = function (store) {
                 : Vuex.mapMutations(mutations);
         },
         mapModule: function (namespace) {
-            return createStore(store['modules'][namespace]);
+            return exports.createStore(store['modules'][namespace]);
         },
     };
 };
