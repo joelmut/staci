@@ -64,20 +64,39 @@ class Store<S, G, A, M> implements IStore<S, G, A, M> {
   hotUpdate = options => this.store.hotUpdate(options);
 }
 
-type Values<T> = { [K in keyof T]: T[K] };
+export type Values<T> = { [K in keyof T]: T[K] };
 
-export const createStore = <S extends Values<S>>(store: S) => {
+export type Key<T> = keyof T;
+
+export interface Mappers<Store extends Values<Store>> {
+  store: IStore<
+    Store['state'],
+    Store['getters'],
+    Store['actions'],
+    Store['mutations']
+  >;
+  mapState(
+    state: Key<Store['state']>[],
+  ): VuexTypes.Dictionary<VuexTypes.Computed>;
+  mapGetters(
+    getters: Key<Store['getters']>[],
+  ): VuexTypes.Dictionary<VuexTypes.Computed>;
+  mapMutations(
+    mutations: Key<Store['mutations']>[],
+  ): VuexTypes.Dictionary<VuexTypes.MutationMethod>;
+  mapActions(
+    actions: Key<Store['actions']>[],
+  ): VuexTypes.Dictionary<VuexTypes.ActionMethod>;
+  namespace<N extends Key<Store['modules']>>(
+    namespace: N,
+  ): Mappers<Store['modules'][N]>;
+}
+
+export const createStore = <S extends Values<S>>(store: S): Mappers<S> => {
   type State = S['state'];
   type Getters = S['getters'];
   type Actions = S['actions'];
   type Mutations = S['mutations'];
-  type Modules = S['modules'];
-  type StateKeys = keyof State;
-  type GettersKeys = keyof Getters;
-  type ActionsKeys = keyof Actions;
-  type MutationsKeys = keyof Mutations;
-  type ModulesKeys = keyof Modules;
-  type KeyValue<T> = { [x: string]: T };
 
   const vuexStore = new Vuex.Store<State>(store);
   const st = new Store<State, Getters, Actions, Mutations>(vuexStore) as IStore<
@@ -86,30 +105,23 @@ export const createStore = <S extends Values<S>>(store: S) => {
     Actions,
     Mutations
   >;
+
   return {
     store: st,
-    mapState(state: StateKeys[] | KeyValue<StateKeys>) {
-      return name
-        ? Vuex.mapState(name, state as any)
-        : Vuex.mapState(state as any);
+    mapState(state) {
+      return Vuex.mapState(state);
     },
-    mapGetters(getters: GettersKeys[] | KeyValue<GettersKeys>) {
-      return name
-        ? Vuex.mapGetters(name, getters as any)
-        : Vuex.mapGetters(getters as any);
+    mapGetters(getters) {
+      return Vuex.mapGetters(getters);
     },
-    mapActions(actions: ActionsKeys[] | KeyValue<ActionsKeys>) {
-      return name
-        ? Vuex.mapActions(name, actions as any)
-        : Vuex.mapActions(actions as any);
+    mapMutations(mutations) {
+      return Vuex.mapMutations(mutations);
     },
-    mapMutations(mutations: MutationsKeys[] | KeyValue<MutationsKeys>) {
-      return name
-        ? Vuex.mapMutations(name, mutations as any)
-        : Vuex.mapMutations(mutations as any);
+    mapActions(actions) {
+      return Vuex.mapActions(actions);
     },
-    mapModule<N extends ModulesKeys>(namespace: N) {
-      return createStore(store['modules'][namespace] as Modules[N]);
+    namespace(namespace) {
+      return createStore(store['modules'][namespace]);
     },
   };
 };
