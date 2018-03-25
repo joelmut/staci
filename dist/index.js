@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var vuex_1 = require("vuex");
-var VuexTypes = require("vuex/types");
+var Vuex = require("vuex");
 exports.createGetters = function (state, rootState) { return function (getters) { return getters; }; };
 exports.createActions = function (state, getters, mutations, rootState) { return function (actions) {
     return actions;
@@ -49,31 +48,33 @@ var Store = /** @class */ (function () {
     return Store;
 }());
 exports.createStore = function (store) {
-    var vuexStore = new VuexTypes.Store(store);
+    var vuexStore = new Vuex.Store(store);
     var st = new Store(vuexStore);
     return {
         store: st,
         mapState: function (state) {
-            return name ? vuex_1.mapState(name, state) : vuex_1.mapState(state);
+            return name
+                ? Vuex.mapState(name, state)
+                : Vuex.mapState(state);
         },
         mapGetters: function (getters) {
             return name
-                ? vuex_1.mapGetters(name, getters)
-                : vuex_1.mapGetters(getters);
+                ? Vuex.mapGetters(name, getters)
+                : Vuex.mapGetters(getters);
         },
         mapActions: function (actions) {
             return name
-                ? vuex_1.mapActions(name, actions)
-                : vuex_1.mapActions(actions);
+                ? Vuex.mapActions(name, actions)
+                : Vuex.mapActions(actions);
         },
         mapMutations: function (mutations) {
             return name
-                ? vuex_1.mapMutations(name, mutations)
-                : vuex_1.mapMutations(mutations);
+                ? Vuex.mapMutations(name, mutations)
+                : Vuex.mapMutations(mutations);
         },
         mapModule: function (namespace) {
             return exports.createStore(store['modules'][namespace]);
         },
     };
 };
-exports.install = function (Vue) { return Vue.use({ install: vuex_1.install }); };
+exports.install = function (Vue) { return Vue.use({ install: Vuex.install }); };
