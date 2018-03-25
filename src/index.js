@@ -1,21 +1,14 @@
 import * as Vuex from 'vuex';
-export var mapStore = function () { return ({
-    getters: function (getters) {
-        return getters;
-    },
-    actions: function (actions) {
-        return actions;
-    },
-    mutations: function (mutations) {
-        return mutations;
-    },
-}); };
+export var createGetters = function (state, rootState) { return function (getters) { return getters; }; };
+export var createActions = function (state, getters, mutations, rootState) { return function (actions) {
+    return actions;
+}; };
+export var createMutations = function (state) { return function (mutations) { return mutations; }; };
 var Store = /** @class */ (function () {
     function Store(store) {
         var _this = this;
         this.store = store;
         this.replaceState = function (state) { return _this.store.replaceState(state); };
-        this.getType = function (type) { return (type.type ? type.type : type); };
         this.subscribe = function (fn) { return _this.store.subscribe(fn); };
         this.watch = function (getter, cb, options) {
             return _this.store.watch(getter, cb, options);
@@ -41,10 +34,14 @@ var Store = /** @class */ (function () {
         configurable: true
     });
     Store.prototype.dispatch = function (type, payload, options) {
-        return this.store.dispatch(this.getType(type), payload, options);
+        return typeof type === 'string'
+            ? this.store.dispatch(type, payload, options)
+            : this.store.dispatch(type, options);
     };
     Store.prototype.commit = function (type, payload, options) {
-        return this.store.commit(this.getType(type), payload, options);
+        return typeof type === 'string'
+            ? this.store.commit(type, payload, options)
+            : this.store.commit(type, options);
     };
     return Store;
 }());
@@ -54,7 +51,9 @@ export var createStore = function (store) {
     return {
         store: st,
         mapState: function (state) {
-            return name ? Vuex.mapState(name, state) : Vuex.mapState(state);
+            return name
+                ? Vuex.mapState(name, state)
+                : Vuex.mapState(state);
         },
         mapGetters: function (getters) {
             return name
