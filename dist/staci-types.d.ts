@@ -1,4 +1,5 @@
 import * as Vuex from 'vuex';
+import { Vue, VueConstructor } from 'vue/types/vue';
 export declare type Values<T> = {
     [K in keyof T]: T[K];
 };
@@ -71,3 +72,4 @@ export interface Store<S, G, A, M> {
         modules?: Vuex.ModuleTree<S>;
     }): void;
 }
+export declare function install(Vue: VueConstructor<Vue>): void;

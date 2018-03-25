@@ -16,9 +16,11 @@
     "typescript-vue",
     "strong-typed"
   ],
-  "devDependencies": {
-    "vue": "^2.5.16",
+  "dependencies": {
     "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "vue": "^2.5.16"
   },
   "repository": {
     "type": "git",

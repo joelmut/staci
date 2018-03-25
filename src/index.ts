@@ -5,10 +5,9 @@ import {
   MapAction,
   MapMutation,
 } from './staci-types';
-export * from './staci-types';
 
 export const createGetters = <S, RS = any>(state: S, rootState?: RS) => <G>(
-  getters: Vuex.GetterTree<S, RS> | MapGetter<S, G, RS>,
+  getters: MapGetter<S, G, RS> | Vuex.GetterTree<S, RS>,
 ) => getters as MapGetter<S, G, RS>;
 
 export const createActions = <S, G, M, RS = any>(
@@ -112,3 +111,5 @@ export const createStore = <S extends Values<S>>(store: S) => {
     },
   };
 };
+
+export const install = Vue => Vue.use(Vuex);

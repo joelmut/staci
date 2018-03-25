@@ -77,3 +77,4 @@ exports.createStore = function (store) {
         },
     };
 };
+exports.install = function (Vue) { return Vue.use(Vuex); };
