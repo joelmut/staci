@@ -5,8 +5,6 @@ import {
   createActions,
 } from '../src';
 
-import { ActionTree } from '../src/index.d';
-
 // Data
 
 const seriesData: Serie[] = [

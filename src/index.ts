@@ -1,5 +1,11 @@
 import * as Vuex from 'vuex';
-import { Store as IStore, MapGetter, MapAction, MapMutation } from './staci.d';
+import {
+  Store as IStore,
+  MapGetter,
+  MapAction,
+  MapMutation,
+} from './staci-types';
+export * from './staci-types';
 
 export const createGetters = <S, RS = any>(state: S, rootState?: RS) => <G>(
   getters: Vuex.GetterTree<S, RS> | MapGetter<S, G, RS>,

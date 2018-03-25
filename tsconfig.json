@@ -4,16 +4,9 @@
     "declaration": true,
     "moduleResolution": "node",
     "target": "es5",
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "rootDir": ".",
-    "sourceMap": true,
-    "lib": ["dom", "es2017"],
-    "typeRoots": ["node_modules/@types", "src", "examples"],
-    "baseUrl": "./"
+    "rootDir": "./src",
+    "outDir": "dist"
   },
-  "include": ["src"],
+  "include": ["./src/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,5 +1,6 @@
 import * as Vuex from 'vuex';
-import { Store as IStore, MapGetter, MapAction, MapMutation } from './staci.d';
+import { Store as IStore, MapGetter, MapAction, MapMutation } from './staci-types';
+export * from './staci-types';
 export declare const createGetters: <S, RS = any>(state: S, rootState?: RS) => <G>(getters: Vuex.GetterTree<S, RS> | MapGetter<S, G, RS>) => MapGetter<S, G, RS>;
 export declare const createActions: <S, G, M, RS = any>(state: S, getters: G, mutations: M, rootState?: RS) => <A>(actions: MapAction<S, G, A, M, RS> | Vuex.ActionTree<S, RS>) => MapAction<S, G, A, M, RS>;
 export declare const createMutations: <S>(state: S) => <M>(mutations: Vuex.MutationTree<S> | MapMutation<S, M>) => MapMutation<S, M>;

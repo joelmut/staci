@@ -77,4 +77,3 @@ exports.createStore = function (store) {
         },
     };
 };
-//# sourceMappingURL=index.js.map
