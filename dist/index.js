@@ -49,9 +49,8 @@ var Store = /** @class */ (function () {
 }());
 exports.createStore = function (store) {
     var vuexStore = new Vuex.Store(store);
-    var st = new Store(vuexStore);
     return {
-        store: st,
+        store: new Store(vuexStore),
         mapState: function (state) {
             return Vuex.mapState(state);
         },
@@ -70,3 +69,10 @@ exports.createStore = function (store) {
     };
 };
 exports.install = function (Vue) { return Vue.use({ install: Vuex.install }); };
+exports.default = {
+    install: exports.install,
+    createStore: exports.createStore,
+    createActions: exports.createActions,
+    createGetters: exports.createGetters,
+    createMutations: exports.createMutations,
+};

@@ -5,6 +5,8 @@ import {
   MapGetter,
   MapAction,
   MapMutation,
+  Values,
+  Mappers,
 } from './staci-types';
 import Vue, { VueConstructor } from 'vue';
 
@@ -64,34 +66,6 @@ class Store<S, G, A, M> implements IStore<S, G, A, M> {
   hotUpdate = options => this.store.hotUpdate(options);
 }
 
-export type Values<T> = { [K in keyof T]: T[K] };
-
-export type Key<T> = keyof T;
-
-export interface Mappers<Store extends Values<Store>> {
-  store: IStore<
-    Store['state'],
-    Store['getters'],
-    Store['actions'],
-    Store['mutations']
-  >;
-  mapState(
-    state: Key<Store['state']>[],
-  ): VuexTypes.Dictionary<VuexTypes.Computed>;
-  mapGetters(
-    getters: Key<Store['getters']>[],
-  ): VuexTypes.Dictionary<VuexTypes.Computed>;
-  mapMutations(
-    mutations: Key<Store['mutations']>[],
-  ): VuexTypes.Dictionary<VuexTypes.MutationMethod>;
-  mapActions(
-    actions: Key<Store['actions']>[],
-  ): VuexTypes.Dictionary<VuexTypes.ActionMethod>;
-  namespace<N extends Key<Store['modules']>>(
-    namespace: N,
-  ): Mappers<Store['modules'][N]>;
-}
-
 export const createStore = <S extends Values<S>>(store: S): Mappers<S> => {
   type State = S['state'];
   type Getters = S['getters'];
@@ -99,15 +73,9 @@ export const createStore = <S extends Values<S>>(store: S): Mappers<S> => {
   type Mutations = S['mutations'];
 
   const vuexStore = new Vuex.Store<State>(store);
-  const st = new Store<State, Getters, Actions, Mutations>(vuexStore) as IStore<
-    State,
-    Getters,
-    Actions,
-    Mutations
-  >;
 
   return {
-    store: st,
+    store: new Store<State, Getters, Actions, Mutations>(vuexStore),
     mapState(state) {
       return Vuex.mapState(state);
     },
@@ -127,3 +95,11 @@ export const createStore = <S extends Values<S>>(store: S): Mappers<S> => {
 };
 
 export const install = Vue => Vue.use({ install: Vuex.install });
+
+export default {
+  install,
+  createStore,
+  createActions,
+  createGetters,
+  createMutations,
+};
