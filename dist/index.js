@@ -47,26 +47,30 @@ var Store = /** @class */ (function () {
     };
     return Store;
 }());
-exports.createStore = function (store) {
-    var vuexStore = new Vuex.Store(store);
+exports._createStore = function (store, name) {
     return {
-        store: new Store(vuexStore),
+        store: new Store(new Vuex.Store(store)),
         mapState: function (state) {
-            return Vuex.mapState(state);
+            return name ? Vuex.mapState(name, state) : Vuex.mapState(state);
         },
         mapGetters: function (getters) {
-            return Vuex.mapGetters(getters);
+            return name ? Vuex.mapGetters(name, getters) : Vuex.mapGetters(getters);
         },
         mapMutations: function (mutations) {
-            return Vuex.mapMutations(mutations);
+            return name
+                ? Vuex.mapMutations(name, mutations)
+                : Vuex.mapMutations(mutations);
         },
         mapActions: function (actions) {
-            return Vuex.mapActions(actions);
+            return name ? Vuex.mapActions(name, actions) : Vuex.mapActions(actions);
         },
         namespace: function (namespace) {
-            return exports.createStore(store['modules'][namespace]);
+            return exports._createStore(store['modules'][namespace], namespace);
         },
     };
+};
+exports.createStore = function (store) {
+    return exports._createStore(store);
 };
 exports.install = function (Vue) { return Vue.use({ install: Vuex.install }); };
 exports.default = {
