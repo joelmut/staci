@@ -66,33 +66,41 @@ class Store<S, G, A, M> implements IStore<S, G, A, M> {
   hotUpdate = options => this.store.hotUpdate(options);
 }
 
-export const createStore = <S extends Values<S>>(store: S): Mappers<S> => {
+export const _createStore = <S extends Values<S>>(
+  store: S,
+  name?: string,
+): Mappers<S> => {
   type State = S['state'];
   type Getters = S['getters'];
   type Actions = S['actions'];
   type Mutations = S['mutations'];
 
-  const vuexStore = new Vuex.Store<State>(store);
-
   return {
-    store: new Store<State, Getters, Actions, Mutations>(vuexStore),
+    store: new Store<State, Getters, Actions, Mutations>(
+      new Vuex.Store<State>(store),
+    ),
     mapState(state) {
-      return Vuex.mapState(state);
+      return name ? Vuex.mapState(name, state) : Vuex.mapState(state);
     },
     mapGetters(getters) {
-      return Vuex.mapGetters(getters);
+      return name ? Vuex.mapGetters(name, getters) : Vuex.mapGetters(getters);
     },
     mapMutations(mutations) {
-      return Vuex.mapMutations(mutations);
+      return name
+        ? Vuex.mapMutations(name, mutations)
+        : Vuex.mapMutations(mutations);
     },
     mapActions(actions) {
-      return Vuex.mapActions(actions);
+      return name ? Vuex.mapActions(name, actions) : Vuex.mapActions(actions);
     },
     namespace(namespace) {
-      return createStore(store['modules'][namespace]);
+      return _createStore(store['modules'][namespace], namespace);
     },
   };
 };
+
+export const createStore = <S extends Values<S>>(store: S): Mappers<S> =>
+  _createStore(store);
 
 export const install = Vue => Vue.use({ install: Vuex.install });
 
