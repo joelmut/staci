@@ -47,36 +47,39 @@ var Store = /** @class */ (function () {
     };
     return Store;
 }());
-exports._createStore = function (store, name) {
+var _createStore = function (store, name) {
     return {
         store: new Store(new Vuex.Store(store)),
         mapState: function (state) {
-            return name ? Vuex.mapState(name, state) : Vuex.mapState(state);
+            var _state = state;
+            return name ? Vuex.mapState(name, _state) : Vuex.mapState(_state);
         },
         mapGetters: function (getters) {
-            return name ? Vuex.mapGetters(name, getters) : Vuex.mapGetters(getters);
+            var _getters = getters;
+            return name ? Vuex.mapGetters(name, _getters) : Vuex.mapGetters(_getters);
         },
         mapMutations: function (mutations) {
+            var _mutations = mutations;
             return name
-                ? Vuex.mapMutations(name, mutations)
-                : Vuex.mapMutations(mutations);
+                ? Vuex.mapMutations(name, _mutations)
+                : Vuex.mapMutations(_mutations);
         },
         mapActions: function (actions) {
-            return name ? Vuex.mapActions(name, actions) : Vuex.mapActions(actions);
+            var _actions = actions;
+            return name ? Vuex.mapActions(name, _actions) : Vuex.mapActions(_actions);
         },
         namespace: function (namespace) {
-            return exports._createStore(store['modules'][namespace], namespace);
+            return _createStore(store['modules'][namespace], namespace);
         },
     };
 };
 exports.createStore = function (store) {
-    return exports._createStore(store);
+    return _createStore(store);
 };
-exports.install = function (Vue) { return Vue.use({ install: Vuex.install }); };
-exports.default = {
-    install: exports.install,
+var Staci = {
     createStore: exports.createStore,
     createActions: exports.createActions,
     createGetters: exports.createGetters,
     createMutations: exports.createMutations,
 };
+exports.default = Staci;

@@ -1,9 +1,11 @@
 import * as Vuex from 'vuex/types';
 import { Vue, VueConstructor } from 'vue/types/vue';
+import { createStore, createGetters, createMutations, createActions } from '.';
 
 // Global Types
 export type Values<T> = { [K in keyof T]: T[K] };
 export type Key<T> = keyof T;
+export type KeyValue<T> = { [x: string]: Key<T> };
 
 export interface Payload<T> {
   type: keyof T;
@@ -131,8 +133,6 @@ export interface Store<S, G, A, M> {
   }): void;
 }
 
-export declare function install(Vue: VueConstructor<Vue>): void;
-
 export interface Mappers<Store2 extends Values<Store2>> {
   store: Store<
     Store2['state'],
@@ -140,15 +140,26 @@ export interface Mappers<Store2 extends Values<Store2>> {
     Store2['actions'],
     Store2['mutations']
   >;
-  mapState(state: Key<Store2['state']>[]): Vuex.Dictionary<Vuex.Computed>;
-  mapGetters(getters: Key<Store2['getters']>[]): Vuex.Dictionary<Vuex.Computed>;
+  mapState(
+    state: Key<Store2['state']>[] | KeyValue<Store2['state']>,
+  ): Vuex.Dictionary<Vuex.Computed>;
+  mapGetters(
+    getters: Key<Store2['getters']>[] | KeyValue<Store2['getters']>,
+  ): Vuex.Dictionary<Vuex.Computed>;
   mapMutations(
-    mutations: Key<Store2['mutations']>[],
+    mutations: Key<Store2['mutations']>[] | KeyValue<Store2['mutations']>,
   ): Vuex.Dictionary<Vuex.MutationMethod>;
   mapActions(
-    actions: Key<Store2['actions']>[],
+    actions: Key<Store2['actions']>[] | KeyValue<Store2['actions']>,
   ): Vuex.Dictionary<Vuex.ActionMethod>;
   namespace<N extends Key<Store2['modules']>>(
     namespace: N,
   ): Mappers<Store2['modules'][N]>;
+}
+
+export interface Staci {
+  createStore: typeof createStore;
+  createGetters: typeof createGetters;
+  createMutations: typeof createMutations;
+  createActions: typeof createActions;
 }

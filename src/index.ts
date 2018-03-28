@@ -7,6 +7,7 @@ import {
   MapMutation,
   Values,
   Mappers,
+  Staci,
 } from './staci-types';
 import Vue, { VueConstructor } from 'vue';
 
@@ -66,7 +67,7 @@ class Store<S, G, A, M> implements IStore<S, G, A, M> {
   hotUpdate = options => this.store.hotUpdate(options);
 }
 
-export const _createStore = <S extends Values<S>>(
+const _createStore = <S extends Values<S>>(
   store: S,
   name?: string,
 ): Mappers<S> => {
@@ -80,18 +81,22 @@ export const _createStore = <S extends Values<S>>(
       new Vuex.Store<State>(store),
     ),
     mapState(state) {
-      return name ? Vuex.mapState(name, state) : Vuex.mapState(state);
+      const _state = state as any;
+      return name ? Vuex.mapState(name, _state) : Vuex.mapState(_state);
     },
     mapGetters(getters) {
-      return name ? Vuex.mapGetters(name, getters) : Vuex.mapGetters(getters);
+      const _getters = getters as any;
+      return name ? Vuex.mapGetters(name, _getters) : Vuex.mapGetters(_getters);
     },
     mapMutations(mutations) {
+      const _mutations = mutations as any;
       return name
-        ? Vuex.mapMutations(name, mutations)
-        : Vuex.mapMutations(mutations);
+        ? Vuex.mapMutations(name, _mutations)
+        : Vuex.mapMutations(_mutations);
     },
     mapActions(actions) {
-      return name ? Vuex.mapActions(name, actions) : Vuex.mapActions(actions);
+      const _actions = actions as any;
+      return name ? Vuex.mapActions(name, _actions) : Vuex.mapActions(_actions);
     },
     namespace(namespace) {
       return _createStore(store['modules'][namespace], namespace);
@@ -102,12 +107,11 @@ export const _createStore = <S extends Values<S>>(
 export const createStore = <S extends Values<S>>(store: S): Mappers<S> =>
   _createStore(store);
 
-export const install = Vue => Vue.use({ install: Vuex.install });
-
-export default {
-  install,
+const Staci: Staci = {
   createStore,
   createActions,
   createGetters,
   createMutations,
 };
+
+export default Staci;
