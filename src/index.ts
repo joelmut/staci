@@ -28,14 +28,38 @@ export const createMutations = <S>(state: S) => <M>(
 ) => mutations as MapMutation<S, M>;
 
 class Store<S, G, A, M> implements IStore<S, G, A, M> {
-  constructor(private store: VuexTypes.Store<S>) {}
+  constructor(private store: VuexTypes.Store<S>, private name: string = '') {}
 
   get state() {
-    return this.store.state;
+    const state = this.store.state;
+    const keys = Object.keys(state).filter(e => e.startsWith(this.name));
+    if (this.name) {
+      return keys.reduce(
+        (result, key) => ({
+          ...result,
+          [key.replace(`${this.name}/`, '')]: state[key],
+        }),
+        {},
+      ) as any;
+    } else {
+      return state;
+    }
   }
 
   get getters() {
-    return this.store.getters;
+    const getters = this.store.getters;
+    const keys = Object.keys(getters).filter(e => e.startsWith(this.name));
+    if (this.name) {
+      return keys.reduce(
+        (result, key) => ({
+          ...result,
+          [key.replace(`${this.name}/`, '')]: getters[key],
+        }),
+        {},
+      ) as any;
+    } else {
+      return getters;
+    }
   }
 
   replaceState = state => this.store.replaceState(state);
@@ -43,15 +67,25 @@ class Store<S, G, A, M> implements IStore<S, G, A, M> {
   dispatch(type, options?);
   dispatch(type, payload?, options?) {
     return typeof type === 'string'
-      ? this.store.dispatch(type, payload, options)
-      : this.store.dispatch(type, options);
+      ? this.store.dispatch(
+          this.name ? `${this.name}/${type}` : type,
+          payload,
+          options,
+        )
+      : this.store.dispatch(
+          this.name ? { ...type, type: `${this.name}/${type}` } : type,
+          options,
+        );
   }
 
   commit(type, options?);
   commit(type, payload?, options?) {
     return typeof type === 'string'
-      ? this.store.commit(type, payload, options)
-      : this.store.commit(type, options);
+      ? this.store.commit(name ? `${name}/${type}` : type, payload, options)
+      : this.store.commit(
+          name ? { ...type, type: `${name}/${type}` } : type,
+          options,
+        );
   }
 
   subscribe = (fn: (mutation, state) => any) => this.store.subscribe(fn);
@@ -69,17 +103,15 @@ class Store<S, G, A, M> implements IStore<S, G, A, M> {
 
 const _createStore = <S extends Values<S>>(
   store: S,
+  vuexStore: Vuex.Store<S>,
   name?: string,
 ): Mappers<S> => {
   type State = S['state'];
   type Getters = S['getters'];
   type Actions = S['actions'];
   type Mutations = S['mutations'];
-
   return {
-    store: new Store<State, Getters, Actions, Mutations>(
-      new Vuex.Store<State>(store),
-    ),
+    store: new Store<State, Getters, Actions, Mutations>(vuexStore, name),
     mapState(state) {
       const _state = state as any;
       return name ? Vuex.mapState(name, _state) : Vuex.mapState(_state);
@@ -99,13 +131,15 @@ const _createStore = <S extends Values<S>>(
       return name ? Vuex.mapActions(name, _actions) : Vuex.mapActions(_actions);
     },
     namespace(namespace) {
-      return _createStore(store['modules'][namespace], namespace);
+      return _createStore(store['modules'][namespace], vuexStore, namespace);
     },
   };
 };
 
-export const createStore = <S extends Values<S>>(store: S): Mappers<S> =>
-  _createStore(store);
+export const createStore = <S extends Values<S>>(
+  store: S,
+  vuexStore: Vuex.Store<S>,
+): Mappers<S> => _createStore(store, vuexStore);
 
 const Staci: Staci = {
   createStore,

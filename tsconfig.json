@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
+    "target": "es2015",
     "module": "commonjs",
+    "strict": true,
     "declaration": true,
-    "noImplicitAny": false,
-    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
     "moduleResolution": "node",
-    "target": "es5",
-    "rootDir": "./src",
-    "outDir": "dist"
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "types": ["node"],
+    "lib": ["dom", "es2017"],
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["./src/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.vue"],
   "exclude": ["node_modules"]
 }

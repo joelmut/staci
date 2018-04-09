@@ -5,22 +5,33 @@
   "private": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "scripts": {
+    "start": "tsc && nodemon dist/index.js",
+    "example": "tsc && nodemon example.js"
+  },
   "keywords": [
     "vuex",
-    "vue",
     "typescript",
+    "javascript",
     "state-management",
+    "vue",
     "strongly-typed",
     "intellisense",
     "vue-typescript",
     "typescript-vue",
+    "vue-javascript",
+    "javascript-vue",
+    "vuex-typescript",
+    "typescript-vuex",
+    "vuex-javascript",
+    "javascript-vuex",
     "strong-typed"
   ],
-  "dependencies": {
-    "vuex": "^3.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "vue": "^2.5.16"
+    "@types/node": "^9.6.2",
+    "vue": "^2.5.16",
+    "vuex": "^3.0.1"
   },
   "repository": {
     "type": "git",

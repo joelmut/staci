@@ -1,85 +1,83 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Vuex = require("vuex");
-exports.createGetters = function (state, rootState) { return function (getters) { return getters; }; };
-exports.createActions = function (state, getters, mutations, rootState) { return function (actions) {
-    return actions;
-}; };
-exports.createMutations = function (state) { return function (mutations) { return mutations; }; };
-var Store = /** @class */ (function () {
-    function Store(store) {
-        var _this = this;
+const Vuex = require("vuex");
+exports.createGetters = (state, rootState) => (getters) => getters;
+exports.createActions = (state, getters, mutations, rootState) => (actions) => actions;
+exports.createMutations = (state) => (mutations) => mutations;
+class Store {
+    constructor(store, name = '') {
         this.store = store;
-        this.replaceState = function (state) { return _this.store.replaceState(state); };
-        this.subscribe = function (fn) { return _this.store.subscribe(fn); };
-        this.watch = function (getter, cb, options) {
-            return _this.store.watch(getter, cb, options);
-        };
-        this.registerModule = function (path, module, options) {
-            return _this.store.registerModule(path, module, options);
-        };
-        this.unregisterModule = function (path) { return _this.store.unregisterModule(path); };
-        this.hotUpdate = function (options) { return _this.store.hotUpdate(options); };
+        this.name = name;
+        this.replaceState = state => this.store.replaceState(state);
+        this.subscribe = (fn) => this.store.subscribe(fn);
+        this.watch = (getter, cb, options) => this.store.watch(getter, cb, options);
+        this.registerModule = (path, module, options) => this.store.registerModule(path, module, options);
+        this.unregisterModule = path => this.store.unregisterModule(path);
+        this.hotUpdate = options => this.store.hotUpdate(options);
     }
-    Object.defineProperty(Store.prototype, "state", {
-        get: function () {
-            return this.store.state;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Store.prototype, "getters", {
-        get: function () {
-            return this.store.getters;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Store.prototype.dispatch = function (type, payload, options) {
+    get state() {
+        const state = this.store.state;
+        const keys = Object.keys(state).filter(e => e.startsWith(this.name));
+        if (this.name) {
+            return keys.reduce((result, key) => (Object.assign({}, result, { [key.replace(`${this.name}/`, '')]: state[key] })), {});
+        }
+        else {
+            return state;
+        }
+    }
+    get getters() {
+        const getters = this.store.getters;
+        const keys = Object.keys(getters).filter(e => e.startsWith(this.name));
+        if (this.name) {
+            return keys.reduce((result, key) => (Object.assign({}, result, { [key.replace(`${this.name}/`, '')]: getters[key] })), {});
+        }
+        else {
+            return getters;
+        }
+    }
+    dispatch(type, payload, options) {
         return typeof type === 'string'
-            ? this.store.dispatch(type, payload, options)
-            : this.store.dispatch(type, options);
-    };
-    Store.prototype.commit = function (type, payload, options) {
+            ? this.store.dispatch(this.name ? `${this.name}/${type}` : type, payload, options)
+            : this.store.dispatch(this.name ? Object.assign({}, type, { type: `${this.name}/${type}` }) : type, options);
+    }
+    commit(type, payload, options) {
         return typeof type === 'string'
-            ? this.store.commit(type, payload, options)
-            : this.store.commit(type, options);
-    };
-    return Store;
-}());
-var _createStore = function (store, name) {
+            ? this.store.commit(name ? `${name}/${type}` : type, payload, options)
+            : this.store.commit(name ? Object.assign({}, type, { type: `${name}/${type}` }) : type, options);
+    }
+}
+const _createStore = (store, vuexStore, name) => {
     return {
-        store: new Store(new Vuex.Store(store)),
-        mapState: function (state) {
-            var _state = state;
+        store: new Store(vuexStore, name),
+        mapState(state) {
+            const _state = state;
             return name ? Vuex.mapState(name, _state) : Vuex.mapState(_state);
         },
-        mapGetters: function (getters) {
-            var _getters = getters;
+        mapGetters(getters) {
+            const _getters = getters;
             return name ? Vuex.mapGetters(name, _getters) : Vuex.mapGetters(_getters);
         },
-        mapMutations: function (mutations) {
-            var _mutations = mutations;
+        mapMutations(mutations) {
+            const _mutations = mutations;
             return name
                 ? Vuex.mapMutations(name, _mutations)
                 : Vuex.mapMutations(_mutations);
         },
-        mapActions: function (actions) {
-            var _actions = actions;
+        mapActions(actions) {
+            const _actions = actions;
             return name ? Vuex.mapActions(name, _actions) : Vuex.mapActions(_actions);
         },
-        namespace: function (namespace) {
-            return _createStore(store['modules'][namespace], namespace);
+        namespace(namespace) {
+            return _createStore(store['modules'][namespace], vuexStore, namespace);
         },
     };
 };
-exports.createStore = function (store) {
-    return _createStore(store);
-};
-var Staci = {
+exports.createStore = (store, vuexStore) => _createStore(store, vuexStore);
+const Staci = {
     createStore: exports.createStore,
     createActions: exports.createActions,
     createGetters: exports.createGetters,
     createMutations: exports.createMutations,
 };
 exports.default = Staci;
+//# sourceMappingURL=index.js.map
