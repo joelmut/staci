@@ -2,6 +2,8 @@
 
 Staci is a library built on top of vuex that provide a simple way to get type checking
 
+# Atention: At the moment this library is not working, i dont know when i fix it. sorry!
+
 ## Install
 
 ```bash
